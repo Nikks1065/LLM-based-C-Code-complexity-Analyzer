@@ -1,0 +1,6 @@
+{
+  "name": "C Code Intelligence Analyzer",
+  "description": "Deterministic static complexity analysis, Halstead, Cyclomatic, Big-O time and space derivation, and Gemini-powered intelligent refactoring assistant for C code.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
