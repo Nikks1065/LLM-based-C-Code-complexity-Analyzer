@@ -1,142 +1,145 @@
-# C Code Intelligence Analyzer — AI-Powered Complexity Analysis and Refactoring Assistant
+# RepoMind – AI-Powered GitHub Repository Analyzer
 
-A comprehensive, explainable software engineering platform for analyzing C source code using a deterministic static-analysis engine and Google Gemini AI.
+> **"Understand. Explore. Analyze. Build."**
 
----
-
-## 1. Key Highlights
-
-- **Strict Boundary Distinction:**
-  - **Deterministic Static Analysis Engine:** Calculates all metrics (LOC, Cyclomatic Complexity, Halstead, Maintainability Index, Big-O Time & Space) using AST parsing, graph algorithms, and formal mathematical formulas. Gemini never fabricates numeric metrics.
-  - **Gemini AI:** Provides contextual code reviews, architectural explanations, answers questions grounded in verified static metrics, and proposes refactoring.
-- **Explainable Calculations:** Every metric features an expandable derivation view with raw inputs, formula definitions, step-by-step intermediate calculations, and clickable source-line evidence.
-- **Deep Big-O Time & Space Engine:** Analyzes loops, nested loops with independent or dependent bounds, logarithmic halving/doubling, linear and divide-and-conquer recurrences, Master Theorem classification, recursion stack frames, and heap allocation tracking (`malloc`/`calloc`/`free`).
-- **Interactive Visualizations:**
-  - Control Flow Graph (CFG) diagram with nodes, branches, joins, and decision points.
-  - Asymptotic operation growth chart comparing $O(1), O(\log n), O(n), O(n \log n), O(n^2)$ and plotting the code's curve for $n = 1 \dots 128$.
-  - Circular maintainability gauge with industry benchmarks.
-  - Line-by-line attribution explorer and searchable Halstead operator/operand frequency tables.
-- **AI Refactoring & Before/After Comparison:**
-  - Reviewable diff between original and proposed code.
-  - Delta metric table ($\Delta$ LOC, $\Delta$ CC, $\Delta$ MI, $\Delta$ Time, $\Delta$ Space, $\Delta$ Findings).
-  - One-click "Accept & Apply Refactoring" with instant recalculation.
-- **Exportable Reports:** Print-ready / PDF-ready HTML report, structured JSON artifact, and C source code export.
+RepoMind is a developer intelligence platform that transforms raw GitHub repositories into deeply analyzed, interactive, and grounded knowledge systems. Built as a comprehensive production-grade upgrade of the **GenAI-Based Code Complexity Analyzer**, RepoMind integrates deterministic static AST complexity calculation with vector-indexed Retrieval-Augmented Generation (RAG) powered by Google Gemini.
 
 ---
 
-## 2. Mathematical Formulas and Conventions
+## 🌟 Key Highlights & Transformation
 
-### A. Lines of Code (LOC)
-- **Physical Lines:** Total newline-delimited lines in the file.
-- **Blank Lines:** Lines consisting exclusively of whitespace characters.
-- **Comment-Only Lines:** Lines containing solely single-line (`//`) or multiline (`/* ... */`) comments.
-- **Code-Only Lines:** Lines containing executable C tokens or preprocessor directives without inline comments.
-- **Code-Plus-Comment Lines:** Lines containing both executable code and comments.
-- **Non-Empty Lines:** Code-Only + Comment-Only + Code-Plus-Comment.
-- **Strict Partition Principle:** Code-Only + Comment-Only + Code-Plus-Comment + Blank = Physical Lines (100% sum).
+RepoMind preserves and significantly enhances the intellectual property of the original Code Complexity Analyzer while expanding into complete repository intelligence:
 
-### B. Cyclomatic Complexity (McCabe, 1976)
-- **CFG Formula:** $M = E - N + 2P$
-  - $E$: Number of edges in the control flow graph.
-  - $N$: Number of nodes (basic blocks).
-  - $P$: Connected components ($P = 1$ for a single function).
-- **Decision Predicate Method:** $M = \pi + 1$
-  - $\pi$: Count of decision points (`if`, `for`, `while`, `do-while`, `case`, `&&`, `||`, `? :`).
-  - Planar flow graph equivalence: $E - N + 2 = \pi + 1$.
+1. **Static AST Complexity & Algorithmic Heuristics**:
+   - **Lines of Code (LOC)**, SLOC (Source Lines), CLOC (Comment Lines), and Blank Lines.
+   - **Cyclomatic Complexity ($V(G) = 1 + \text{decisions}$)**: Real branch inspection across control flow (`if`, `else if`, `for`, `while`, `case`, `catch`, `except`, `do`, `&&`, `||`, `??`, ternary `?:`).
+   - **Function-Level Complexity**: Isolates each function's line boundaries, parameter counts, cognitive complexity, and algorithmic bottlenecks.
+   - **SEI Maintainability Index**: Normalized 0–100 score derived from Halstead Volume ($V$), Cyclomatic Complexity ($CC$), and Lines of Code ($LOC$).
+   - **Static Big-O Time & Space Bounds**: AST loop nesting depth analysis ($O(1)$, $O(\log N)$, $O(N)$, $O(N \log N)$, $O(N^2)$, $O(N^3)$, $O(2^N)$) with recursion and dynamic allocation profiling.
+   - **Code Smell Detector**: Flags deep nesting (>3 levels), God functions (>50 LOC), high cyclomatic risk (>10), parameter bloat, and empty error handlers.
+   - **Methodology Transparency**: Clearly delineates parser-calculated metrics from heuristic bounds and AI recommendations.
 
-### C. Halstead Software Science (Halstead, 1977)
-- $n_1$: Distinct operators (keywords, arithmetic/logical/relational operators, delimiters).
-- $n_2$: Distinct operands (identifiers, variables, numeric/string literals).
-- $N_1$: Total operator tokens.
-- $N_2$: Total operand tokens.
-- **Vocabulary:** $n = n_1 + n_2$
-- **Length:** $N = N_1 + N_2$
-- **Volume:** $V = N \times \log_2(n)$ (bits)
-- **Difficulty:** $D = (n_1 / 2) \times (N_2 / n_2)$
-- **Effort:** $E = D \times V$ (elementary mental discriminations)
-- **Time:** $T = E / 18$ seconds (Halstead Stroud frequency $S = 18$/sec)
-- **Bugs:** $B = V / 3000$ (estimated delivered faults)
+2. **Grounded RAG Repository Chat**:
+   - Conversational AI powered by **Gemini 3.8 Flash (`gemini-3.8-flash`)**.
+   - Code-aware structural chunking with BM25 inverted index and vector similarity.
+   - Strict untrusted data isolation to prevent prompt injection from repository contents.
+   - Every answer cites exact file paths and line ranges with interactive jump-to-source capabilities.
 
-### D. Maintainability Index (MI)
-- **Canonical SEI / Coleman & Oman (1992) Formula:**
-  $$MI_{\text{raw}} = 171 - 5.2 \times \ln(V) - 0.23 \times G - 16.2 \times \ln(LOC) + 50 \times \sin(\sqrt{2.4 \times perCM})$$
-- **Normalized (0–100 scale):**
-  $$MI_{\text{norm}} = \max(0, \min(100, MI_{\text{raw}} \times 100 / 171))$$
-- **Interpretation:**
-  - $85 - 100$: High Maintainability (Green)
-  - $65 - 84$: Moderate Maintainability (Yellow)
-  - $0 - 64$: Low Maintainability / High Technical Debt (Red)
+3. **Repository Architecture & Dependency Map**:
+   - Automatically segments frontend UI, backend services, API routes, database schemas, and configuration layers.
+   - Visual topology map showing data flow and inter-module relationships.
 
-### E. Algorithmic Big-O Time Complexity
-- **Sequential Statements:** $O(1)$
-- **Independent Nested Loops:** $\prod_{i=1}^k n_i \implies O(n^k)$
-- **Dependent Bounds:** e.g. $\sum_{i=0}^{n-1} (n - i) = \frac{n(n+1)}{2} = \frac{1}{2}n^2 + \frac{1}{2}n \implies O(n^2)$
-- **Logarithmic Loops:** Halving/doubling step (`i *= 2`, `i /= 2`, `mid = (low + high) / 2`) $\implies O(\log n)$
-- **Linear Recursion:** $T(n) = T(n-1) + O(1) \implies O(n)$
-- **Divide-and-Conquer:** $T(n) = 2T(n/2) + O(n) \implies O(n \log n)$ (Master Theorem)
-- **Branching Recursion:** $T(n) = T(n-1) + T(n-2) + O(1) \implies O(2^n)$ (Exponential)
+4. **Intelligent Code Review & Bug Hunter**:
+   - Scans for security concerns, concurrency pitfalls, unhandled null states, and error suppression.
+   - Categorized findings with severity badges (Critical, High, Medium, Low), code snippets, and actionable remediation steps.
 
-### F. Space Complexity
-- **Input Storage:** Caller-allocated arguments passed by reference or value.
-- **Auxiliary Space:** Extra memory allocated outside input buffers.
-- **Call Stack Depth:** Activation frame chain ($O(1)$ iterative, $O(\log n)$ divide-and-conquer, $O(n)$ linear recursion).
-- **Heap Allocations:** Dynamic memory sites (`malloc`, `calloc`) and leak detection for missing `free()`.
+5. **Dependency Audit**:
+   - Analyzes `package.json`, `requirements.txt`, and dependencies manifests.
+   - Classifies libraries into Framework, UI, Database, Security, Testing, Tooling, and Utility categories.
+
+6. **Automatic Documentation Generator**:
+   - Synthesizes grounded Markdown documentation: `README.md`, `ARCHITECTURE.md`, `API_SPEC.md`, and `TECH_STACK.md`.
+   - Live dual-mode preview (Rendered Markdown and Raw Source) with one-click `.md` download.
+
+7. **10-Step Developer Onboarding Guide**:
+   - Structured ramp-up path for engineers joining the codebase: mission, stack, folder structure, entry points, execution flow, top 5 files to read first, and interactive completion checklist.
+
+8. **Git Push & Branch Management**:
+   - Built-in terminal guide to stage, commit, and push updates to `feature/repomind-transformation` without overwriting the default branch.
 
 ---
 
-## 3. Technology Stack & Architecture
+## 🏗️ Architecture Overview
 
-- **Frontend:** React 19, TypeScript, Tailwind CSS, Lucide icons.
-- **Backend:** Node.js 22, Express, TypeScript (`tsx`).
-- **AI Integration:** `@google/genai` TypeScript SDK (server-side only, `gemini-3.8-flash`).
-- **Parsing:** Custom C99/C11 Lexer & AST-capable recursive parser with line/column tracking.
-- **Testing:** Native Node.js test runner (`node:test`, `node:assert/strict`).
+```text
+GitHub Repository (URL / Token)
+       │
+       ▼
+GitHub Fetcher & Filter (Sensible Size & Binary Exclusions)
+       │
+       ├─────────────────────────────────┬─────────────────────────────────┐
+       ▼                                 ▼                                 ▼
+Deterministic AST Engine          RAG Ingestion Pipeline          Architecture Mapper
+ • Cyclomatic Complexity (V(G))    • Code-aware Chunking           • Client / Server Split
+ • Halstead Volume & SEI MI        • Inverted Index & BM25         • API Gateways & Models
+ • Big-O Time & Space Bounds       • Grounded Prompt Formulation   • Dependency Extraction
+ • Code Smell Inspector                      │                               │
+       │                                     ▼                               │
+       │                         Gemini 3.8 Flash (Server-Side)              │
+       │                                     │                               │
+       └─────────────────────────────────────┼───────────────────────────────┘
+                                             ▼
+                             RepoMind Unified Web Platform
+                      (Dashboard, Code Explorer, Chat, Quality)
+```
 
 ---
 
-## 4. Setup and Run Instructions
+## 🛠️ Technology Stack
 
-### Prerequisites
-- Node.js >= 20 (Node 22 recommended)
-- npm >= 9
+- **Frontend**: React 19, TypeScript, Tailwind CSS v4, Lucide React, Motion.
+- **Backend**: Node.js, Express, tsx.
+- **AI & Grounding**: Google GenAI SDK (`@google/genai`), Gemini 3.8 Flash (`gemini-3.8-flash`), BM25 + Vector Retrieval Engine.
+- **Testing**: Node's built-in test runner (`node:test`, `node:assert/strict`) via `npx --yes tsx --test`.
 
-### Installation
+---
+
+## 🚀 Quickstart & Local Execution
+
+### 1. Prerequisites
+- Node.js (v18+)
+- (Optional) `GEMINI_API_KEY` for live AI generation. If not configured, RepoMind seamlessly provides deterministic grounded analysis.
+
+### 2. Installation
 ```bash
+# Clone the repository
+git clone https://github.com/nikhilnitt/code-complexity-analyzer.git
+cd code-complexity-analyzer
+
+# Install dependencies
 npm install
 ```
 
-### Environment Configuration
-Configure your Gemini API key in `.env`:
+### 3. Environment Variables
+Create a `.env` file in the project root:
 ```env
-GEMINI_API_KEY="YOUR_GEMINI_API_KEY"
-PORT=3000
+GEMINI_API_KEY="your_gemini_api_key_here"
 ```
-*(In Google AI Studio Build, the API key is injected automatically via the Secrets panel).*
 
-### Development Server
+### 4. Running the Development Server
 ```bash
 npm run dev
 ```
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+The server will start at `http://localhost:3000`, serving both the Express backend API and the Vite React frontend.
 
-### Run Automated Unit Tests
+### 5. Running Automated Unit Tests
 ```bash
-npm test
+npm run test
 ```
-Or directly via Node 22:
-```bash
-node --experimental-strip-types --test src/tests/analyzer.test.ts
-```
-
-### Build for Production
-```bash
-npm run build
-```
+Runs the static complexity analyzer test suite and RAG retrieval test suite.
 
 ---
 
-## 5. Assumptions and Known Limitations
+## 📦 Pushing Upgrades to GitHub
 
-1. **Static Analysis Bounds:** Static complexity analysis cannot solve the general Halting Problem. Loops with runtime-dependent convergence (e.g. pointer traversal `while (ptr != NULL)`) are modeled with linear upper bounds.
-2. **External Libraries:** External standard library calls (e.g. `printf`, `qsort`) are evaluated with standard Big-O profiles.
-3. **Safe Execution Boundary:** The platform executes static AST parsing and metric evaluation exclusively; submitted C code is never executed directly on the host server.
+To push the RepoMind transformation to your GitHub repository safely:
+
+```bash
+# 1. Create and switch to the transformation feature branch
+git checkout -b feature/repomind-transformation
+
+# 2. Stage all upgraded files
+git add .
+
+# 3. Commit the changes
+git commit -m "feat: transform GenAI Code Complexity Analyzer into RepoMind AI platform"
+
+# 4. Push the branch to GitHub
+git push -u origin feature/repomind-transformation
+```
+You can then open a Pull Request from `feature/repomind-transformation` into `main` on GitHub!
+
+---
+
+## 📄 License
+Licensed under the Apache-2.0 License.
