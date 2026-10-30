@@ -1,6 +1,8 @@
 {
-  "name": "C Code Intelligence Analyzer",
-  "description": "Deterministic static complexity analysis, Halstead, Cyclomatic, Big-O time and space derivation, and Gemini-powered intelligent refactoring assistant for C code.",
+  "name": "RepoMind – AI-Powered GitHub Repository Analyzer",
+  "description": "Understand, explore, analyze, debug, and document complete GitHub repositories with intelligent RAG chat, code complexity metrics, architecture mapping, and onboarding guides.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }
